@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shodmon Cyber Security</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 20px;
+    background: #0b1120;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+header {
+    padding: 25px;
+    color: #00e6a0;
+}
+
+nav {
+    padding: 15px;
+    background: #162238;
+    border-radius: 10px;
+}
+
+nav a {
+    color: white;
+    margin: 8px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.card {
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 25px;
+    background: #162238;
+    border-radius: 15px;
+    border: 1px solid #00e6a0;
+}
+
+h2 {
+    color: #00e6a0;
+}
+
+button {
+    padding: 12px 18px;
+    margin: 8px;
+    background: #00e6a0;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+input, select {
+    padding: 12px;
+    margin: 10px;
+    border-radius: 8px;
+    max-width: 90%;
+}
+
+#password {
+    overflow-wrap: anywhere;
+    color: #00e6a0;
+    font-size: 18px;
+}
+
+.tip {
+    background: #0b1120;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛡️ Shodmon Cyber Security</h1>
+    <p>Kiberxavfsizlikni birgalikda o‘rganamiz!</p>
+</header>
+
+<nav>
+    <a href="#home">Bosh sahifa</a>
+    <a href="#generator">Parol yaratgich</a>
+    <a href="#ip">IP manzil</a>
+    <a href="#security">Himoyalanish</a>
+</nav>
+
+<section id="home" class="card">
+    <h2>👋 Xush kelibsiz!</h2>
+    <p>Bu saytda kiberxavfsizlik asoslarini o‘rganishingiz mumkin.</p>
+</section>
+
+<section id="generator" class="card">
+    <h2>🔑 Parol yaratgich</h2>
+
+    <label for="length">Parol uzunligi:</label>
+    <br>
+
+    <select id="length">
+        <option value="8">8 ta belgi</option>
+        <option value="12" selected>12 ta belgi</option>
+        <option value="16">16 ta belgi</option>
+        <option value="20">20 ta belgi</option>
+    </select>
+
+    <br>
+    <button onclick="generatePassword()">🎲 Parol yaratish</button>
+
+    <p id="password"></p>
+
+    <button onclick="copyPassword()">📋 Nusxalash</button>
+    <p id="message"></p>
+</section>
+
+<section id="ip" class="card">
+    <h2>🌐 IP manzil nima?</h2>
+    <p>IP manzil — tarmoqdagi qurilmani aniqlash va unga ma’lumot yuborishga yordam beradigan manzil.</p>
+    <div class="tip">IPv4 misoli: 192.168.1.10</div>
+    <p>IP manzilning o‘zi odamning aniq uy manzilini ko‘rsatmaydi.</p>
+</section>
+
+<section id="security" class="card">
+    <h2>🛡️ Fishingdan himoyalanish</h2>
+    <div class="tip">⚠️ Notanish havolalarni bosishdan oldin tekshir.</div>
+    <div class="tip">🔒 Sayt manzilini diqqat bilan tekshir.</div>
+    <div class="tip">🔑 Parolingni boshqalarga bermagin.</div>
+    <div class="tip">📱 Ikki bosqichli himoyani yoq.</div>
+    <div class="tip">🚫 Tasdiqlash kodlarini hech kimga yuborma.</div>
+</section>
+
+<footer>
+    <p>© 2026 Shodmon Cyber Security</p>
+</footer>
+
+<script>
+function generatePassword() {
+    const length = Number(document.getElementById("length").value);
+
+    const groups = [
+        "abcdefghijklmnopqrstuvwxyz",
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "0123456789",
+        "!@#$%^&*_-+="
+    ];
+
+    const all = groups.join("");
+    const password = [];
+
+    function randomIndex(max) {
+        const array = new Uint32Array(1);
+        const limit = Math.floor(4294967296 / max) * max;
+        let value;
+
+        do {
+            crypto.getRandomValues(array);
+            value = array[0];
+        } while (value >= limit);
+
+        return value % max;
+    }
+
+    for (const group of groups) {
+        password.push(group[randomIndex(group.length)]);
+    }
+
+    while (password.length < length) {
+        password.push(all[randomIndex(all.length)]);
+    }
+
+    for (let i = password.length - 1; i > 0; i--) {
+        const j = randomIndex(i + 1);
+        [password[i], password[j]] = [password[j], password[i]];
+    }
+
+    document.getElementById("password").textContent = password.join("");
+    document.getElementById("message").textContent = "✅ Parol yaratildi!";
+}
+
+async function copyPassword() {
+    const password = document.getElementById("password").textContent;
+    const message = document.getElementById("message");
+
+    if (!password) {
+        message.textContent = "Avval parol yarating!";
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(password);
+        message.textContent = "✅ Parol nusxalandi!";
+    } catch (error) {
+        message.textContent = "Parolni belgilang va nusxalang.";
+    }
+}
+</script>
+
+</body>
+</html>
